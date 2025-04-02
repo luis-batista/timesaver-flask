@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}Editar Agendamento - Clínica{% endblock %}
+{% block heading %}Editar Agendamento{% endblock %}
+{% block nav_agendamentos %}active{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-body">
+        <form action="{{ url_for('agendamento.editar_agendamento', id=agendamento.id) }}" method="post">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Data</label>
+                    <input type="date" name="data" class="form-control" value="{{ agendamento.data }}" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Hora</label>
+                    <input type="time" name="hora" class="form-control" value="{{ agendamento.hora }}" required>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Paciente</label>
+                    <select name="cliente_id" class="form-control" required>
+                        {% for cliente in clientes %}
+                            <option value="{{ cliente.id }}" {% if cliente.id == agendamento.cliente_id %}selected{% endif %}>
+                                {{ cliente.nome }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Procedimento</label>
+                    <select name="procedimento_id" class="form-control" required>
+                        {% for procedimento in procedimentos %}
+                            <option value="{{ procedimento.id }}" {% if procedimento.id == agendamento.procedimento_id %}selected{% endif %}>
+                                {{ procedimento.descricao }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            
+            <div class="mb-3">
+                <label class="form-label">Status</label>
+                <select name="status" class="form-control">
+                    <option value="agendado" {% if agendamento.status == 'agendado' %}selected{% endif %}>Agendado</option>
+                    <option value="realizado" {% if agendamento.status == 'realizado' %}selected{% endif %}>Realizado</option>
+                    <option value="cancelado" {% if agendamento.status == 'cancelado' %}selected{% endif %}>Cancelado</option>
+                </select>
+            </div>
+            
+            <div class="mb-3">
+                <label class="form-label">Observações</label>
+                <textarea name="observacoes" class="form-control" rows="3">{{ agendamento.observacoes }}</textarea>
+            </div>
+            
+            <div>
+                <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                <a href="{{ url_for('agendamento.index') }}" class="btn btn-secondary">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

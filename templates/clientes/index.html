@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}Gerenciar Pacientes - Clínica{% endblock %}
+{% block heading %}Gerenciar Pacientes{% endblock %}
+{% block nav_clientes %}active{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Novo Paciente</h5>
+            </div>
+            <div class="card-body">
+                <form action="{{ url_for('cliente.criar_cliente') }}" method="post">
+                    <div class="mb-3">
+                        <label class="form-label">Nome</label>
+                        <input type="text" name="nome" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Telefone</label>
+                        <input type="text" name="telefone" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" name="email" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Convênio</label>
+                        <select name="convenio_id" class="form-control">
+                            {% for convenio in convenios %}
+                                <option value="{{ convenio.id }}">{{ convenio.nome }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Número da Carteirinha</label>
+                        <input type="text" name="num_carteirinha" class="form-control">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Cadastrar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h5>Pacientes Cadastrados</h5>
+    </div>
+    <div class="card-body">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Telefone</th>
+                    <th>Email</th>
+                    <th>Convênio</th>
+                    <th>Nº Carteirinha</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for cliente in clientes %}
+                    <tr>
+                        <td>{{ cliente.nome }}</td>
+                        <td>{{ cliente.telefone }}</td>
+                        <td>{{ cliente.email }}</td>
+                        <td>{{ cliente.convenio }}</td>
+                        <td>{{ cliente.num_carteirinha }}</td>
+                        <td class="table-actions">
+                            <a href="#" class="btn btn-sm btn-primary">Editar</a>
+                            <a href="{{ url_for('cliente.excluir_cliente', id=cliente.id) }}" class="btn btn-sm btn-danger" onclick="confirmarExclusao(event, '{{ cliente.id }}')">Excluir</a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="6" class="text-center">Nenhum paciente cadastrado</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

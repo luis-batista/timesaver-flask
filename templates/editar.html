@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Editar Paciente - Clínica{% endblock %}
+{% block heading %}Editar Paciente{% endblock %}
+{% block nav_clientes %}active{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-body">
+        <form action="{{ url_for('cliente.editar_cliente', id=cliente.id) }}" method="post">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Nome</label>
+                    <input type="text" name="nome" class="form-control" value="{{ cliente.nome }}" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Telefone</label>
+                    <input type="text" name="telefone" class="form-control" value="{{ cliente.telefone }}" required>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Email</label>
+                    <input type="email" name="email" class="form-control" value="{{ cliente.email }}">
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Convênio</label>
+                    <select name="convenio_id" class="form-control">
+                        {% for convenio in convenios %}
+                            <option value="{{ convenio.id }}" {% if convenio.id == cliente.convenio_id %}selected{% endif %}>
+                                {{ convenio.nome }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            
+            <div class="mb-3">
+                <label class="form-label">Número da Carteirinha</label>
+                <input type="text" name="num_carteirinha" class="form-control" value="{{ cliente.num_carteirinha }}">
+            </div>
+            
+            <div>
+                <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                <a href="{{ url_for('cliente.index') }}" class="btn btn-secondary">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

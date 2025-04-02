@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+
+{% block nav_agendamentos %}active{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Novo Agendamento</h5>
+            </div>
+            <div class="card-body">
+                <form action="{{ url_for('agendamento.criar_agendamento') }}" method="post">
+                    <div class="mb-3">
+                        <label class="form-label">Data</label>
+                        <input type="date" name="data" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Hora</label>
+                        <input type="time" name="hora" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Paciente</label>
+                        <select name="cliente_id" class="form-control" required>
+                            {% for cliente in clientes %}
+                                <option value="{{ cliente.id }}">{{ cliente.nome }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Procedimento</label>
+                        <select name="procedimento_id" class="form-control" required>
+                            {% for procedimento in procedimentos %}
+                                <option value="{{ procedimento.id }}">{{ procedimento.descricao }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Observações</label>
+                        <textarea name="observacoes" class="form-control" rows="3"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Agendar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Filtros</h5>
+            </div>
+            <div class="card-body">
+                <form method="get">
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Data</label>
+                            <input type="date" name="data" class="form-control" value="{{ data_filtro }}">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Paciente</label>
+                            <input type="text" name="cliente" class="form-control" value="{{ cliente_filtro }}">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Procedimento</label>
+                            <input type="text" name="procedimento" class="form-control" value="{{ procedimento_filtro }}">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-secondary">Filtrar</button>
+                    <a href="{{ url_for('agendamento.index') }}" class="btn btn-outline-secondary">Limpar</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h5>Agendamentos</h5>
+    </div>
+    <div class="card-body">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Hora</th>
+                    <th>Paciente</th>
+                    <th>Procedimento</th>
+                    <th>Convênio</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for agendamento in agendamentos %}
+                    <tr>
+                        <td>{{ agendamento.data }}</td>
+                        <td>{{ agendamento.hora }}</td>
+                        <td>{{ agendamento.cliente }}</td>
+                        <td>{{ agendamento.procedimento }}</td>
+                        <td>{{ agendamento.convenio }}</td>
+                        <td>
+                            {% if agendamento.status == 'agendado' %}
+                                <span class="badge bg-info">Agendado</span>
+                            {% elif agendamento.status == 'realizado' %}
+                                <span class="badge bg-success">Realizado</span>
+                            {% elif agendamento.status == 'cancelado' %}
+                                <span class="badge bg-danger">Cancelado</span>
+                            {% else %}
+                                <span class="badge bg-secondary">{{ agendamento.status }}</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{{ url_for('agendamento.editar_agendamento', id=agendamento.id) }}" class="btn btn-sm btn-primary">Editar</a>
+                            <a href="{{ url_for('agendamento.excluir_agendamento', id=agendamento.id) }}" class="btn btn-sm btn-danger" onclick="return confirm('Tem certeza que deseja excluir?')">Excluir</a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="7" class="text-center">Nenhum agendamento encontrado</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
