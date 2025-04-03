@@ -13,7 +13,7 @@ serviço.
 ### O projeto foi feito utilizando Python + Flask
 
 ### Inicialmente inicia-se o ambiente virtual, no meu caso utilizo o Windows.
-- py -3 -m ven venv
+- py -3 -m venv venv
 
 ### Ativa-se o ambiente
 - venv\Scripts\activate
